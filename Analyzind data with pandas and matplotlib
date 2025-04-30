@@ -1,0 +1,93 @@
+# Importing necessary libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+import seaborn as sns
+
+# Task 1: Load and Explore the Dataset
+
+# Load Iris dataset from sklearn
+iris = load_iris()
+
+# Create a dataframe
+df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+
+# Add target labels (species)
+df['species'] = iris.target
+
+# Display the first few rows
+print("First few rows of the dataset:")
+print(df.head())
+
+# Explore the structure of the dataset
+print("\nData types of the columns:")
+print(df.dtypes)
+
+# Check for missing values
+print("\nMissing values in the dataset:")
+print(df.isnull().sum())
+
+# Cleaning the dataset (in this case, no missing values)
+# But if there were, you could fill or drop the missing values.
+df = df.fillna(df.mean())  # This is just in case there were any missing values
+
+# Task 2: Basic Data Analysis
+
+# Basic statistics of numerical columns
+print("\nBasic statistics of numerical columns:")
+print(df.describe())
+
+# Group by 'species' and compute the mean of each numerical column
+grouped_data = df.groupby('species').mean()
+print("\nGrouped data by species:")
+print(grouped_data)
+
+# Correlation between numerical columns
+print("\nCorrelation between numerical columns:")
+print(df.corr())
+
+# Task 3: Data Visualization
+
+# Line chart - Average petal length by species
+plt.figure(figsize=(8, 5))
+df.groupby('species')['petal length (cm)'].mean().plot(kind='line', marker='o')
+plt.title("Average Petal Length by Species")
+plt.xlabel("Species")
+plt.ylabel("Average Petal Length (cm)")
+plt.grid(True)
+plt.show()
+
+# Bar chart - Average sepal length by species
+plt.figure(figsize=(8, 5))
+df.groupby('species')['sepal length (cm)'].mean().plot(kind='bar', color='skyblue')
+plt.title("Average Sepal Length by Species")
+plt.xlabel("Species")
+plt.ylabel("Average Sepal Length (cm)")
+plt.show()
+
+# Histogram - Distribution of petal length
+plt.figure(figsize=(8, 5))
+df['petal length (cm)'].plot(kind='hist', bins=20, edgecolor='black', color='lightgreen')
+plt.title("Distribution of Petal Length")
+plt.xlabel("Petal Length (cm)")
+plt.ylabel("Frequency")
+plt.show()
+
+# Scatter plot - Sepal length vs Petal length
+plt.figure(figsize=(8, 5))
+plt.scatter(df['sepal length (cm)'], df['petal length (cm)'], c='blue', alpha=0.5)
+plt.title("Sepal Length vs Petal Length")
+plt.xlabel("Sepal Length (cm)")
+plt.ylabel("Petal Length (cm)")
+plt.show()
+
+# Seaborn Pairplot - To show relationships between all numerical features
+sns.pairplot(df, hue='species', markers=["o", "s", "D"])
+plt.show()
+
+# Insights/Findings:
+# 1. We can observe that 'petal length' has a strong distinction across different species of Iris.
+# 2. Sepal length and petal length are strongly correlated, suggesting a direct relationship.
+# 3. The distribution of petal length shows a relatively uniform spread across the dataset, 
+#    with more variance in species-specific petal lengths.
+# 4. Grouping by species reveals that each species has a distinct average sepal length and petal length.
